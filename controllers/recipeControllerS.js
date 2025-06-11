@@ -1,31 +1,48 @@
 const { supabase } = require('../utils/supabaseClient.js');
 
+// exports.getAllRecipes = async (req, res) => {
+//     try {
+//       const { data, error } = await supabase
+//         .from('recipe')
+//         .select('*');
+  
+//       if (error) {
+//         throw error;
+//       }
+  
+//       res.status(200).json(data);
+//     }
+//     catch (error) {
+//       console.error('Error fetching recipes:', error);
+//       res.status(500).json({ message: 'Internal server error'});
+//     }
+//   };
 exports.getAllRecipes = async (req, res) => {
-    try {
-      const { data, error } = await supabase
-        .from('recipes')
-        .select('*');
-  
-      if (error) {
-        throw error;
-      }
-  
-      res.status(200).json(data);
+  try {
+    const { data, error } = await supabase
+      .from('recipe') // Make sure your table is named 'recipe'
+      .select('*');
+
+    if (error) {
+      console.error('Supabase error:', error); // Log the actual Supabase error
+      return res.status(500).json({ message: 'Internal server error', error });
     }
-    catch (error) {
-      console.error('Error fetching recipes:', error);
-      res.status(500).json({ message: 'Internal server error' });
-    }
-  };
+
+    res.status(200).json(data);
+  } catch (error) {
+    console.error('Error fetching recipes:', error);
+    res.status(500).json({ message: 'Internal server error', error });
+  }
+};
   
   exports.getRecipeById = async (req, res) => {
-    const { recipeId } = req.params;
+    const { id } = req.params;
 
     try {
         const { data, error } = await supabase
-        .from ('recipes')
+        .from ('recipe')
         .select('*')
-        .eq('id', recipeId)
+        .eq('recipe_id', id)
         .single();
 
         if (error){
